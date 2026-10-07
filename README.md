@@ -84,6 +84,9 @@ Credit-Scoring-Model/
     ├── model_config.py
     ├── predict.py
     └── train_model.py
+
+
+
 🛠️ Tech Stack
 
 Python • Pandas • NumPy • Scikit-learn • CatBoost • XGBoost • LightGBM • Plotly • Streamlit
