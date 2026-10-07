@@ -6,11 +6,13 @@ import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 
+
 # ============================================================
 # PATH SETUP
 # ============================================================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 sys.path.append(BASE_DIR)
 
 from src.predict import prepare_input
@@ -31,30 +33,33 @@ st.set_page_config(
 # CSS
 # ============================================================
 
-st.markdown("""
-<style>
+st.markdown(
+    """
+    <style>
 
-.main-title {
-    font-size: 36px;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
+    .main-title {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
 
-.subtitle {
-    color: #777;
-    font-size: 17px;
-    margin-bottom: 25px;
-}
+    .subtitle {
+        color: #777;
+        font-size: 17px;
+        margin-bottom: 25px;
+    }
 
-.section-title {
-    font-size: 22px;
-    font-weight: 600;
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
+    .section-title {
+        font-size: 22px;
+        font-weight: 600;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
 
-</style>
-""", unsafe_allow_html=True)
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 
 # ============================================================
@@ -78,7 +83,9 @@ def load_model():
 artifact = load_model()
 
 model = artifact["model"]
+
 FEATURE_NAMES = artifact["feature_names"]
+
 THRESHOLD = artifact["threshold"]
 
 
@@ -88,9 +95,16 @@ THRESHOLD = artifact["threshold"]
 
 def probability_to_score(probability):
 
-    score = 850 - (float(probability) * 550)
+    score = 850 - (
+        float(probability) * 550
+    )
 
-    return int(max(300, min(850, score)))
+    return int(
+        max(
+            300,
+            min(850, score)
+        )
+    )
 
 
 # ============================================================
@@ -100,15 +114,19 @@ def probability_to_score(probability):
 def get_risk_level(score):
 
     if score >= 750:
+
         return "Low Risk", "🟢"
 
     elif score >= 670:
+
         return "Moderate Risk", "🔵"
 
     elif score >= 580:
+
         return "High Risk", "🟠"
 
     else:
+
         return "Very High Risk", "🔴"
 
 
@@ -204,9 +222,13 @@ def predict_single(
 
     X = prepare_input(df)
 
-    probability = model.predict_proba(X)[0, 1]
+    probability = model.predict_proba(
+        X
+    )[0, 1]
 
-    prediction = int(probability >= THRESHOLD)
+    prediction = int(
+        probability >= THRESHOLD
+    )
 
     return probability, prediction
 
@@ -220,6 +242,7 @@ def create_score_gauge(score):
     fig = go.Figure(
         go.Indicator(
             mode="gauge+number",
+
             value=score,
 
             title={
@@ -227,6 +250,7 @@ def create_score_gauge(score):
             },
 
             gauge={
+
                 "axis": {
                     "range": [300, 850]
                 },
@@ -236,21 +260,27 @@ def create_score_gauge(score):
                 },
 
                 "steps": [
+
                     {
                         "range": [300, 580]
                     },
+
                     {
                         "range": [580, 670]
                     },
+
                     {
                         "range": [670, 750]
                     },
+
                     {
                         "range": [750, 850]
                     }
+
                 ],
 
                 "threshold": {
+
                     "line": {
                         "width": 4
                     },
@@ -262,7 +292,9 @@ def create_score_gauge(score):
     )
 
     fig.update_layout(
+
         height=350,
+
         margin=dict(
             l=20,
             r=20,
@@ -386,7 +418,6 @@ if page == "👤 Check Applicant":
             "Other": 4
         }[education_label]
 
-
     with col2:
 
         marriage_label = st.selectbox(
@@ -420,18 +451,6 @@ if page == "👤 Check Applicant":
         "Select the payment status for each of the last 6 months."
     )
 
-    # UCI dataset mapping:
-    #
-    # -2 = No consumption
-    # -1 = Paid duly / on time
-    #  0 = Revolving credit
-    #  1 = 1 month delay
-    #  2 = 2 months delay
-    #  3 = 3 months delay
-    #  4 = 4 months delay
-    #  5 = 5 months delay
-    #  6 = 6+ months delay
-
     payment_options = {
 
         "Paid on time": -1,
@@ -454,11 +473,17 @@ if page == "👤 Check Applicant":
     }
 
     month_labels = [
+
         "Latest Month",
+
         "1 Month Ago",
+
         "2 Months Ago",
+
         "3 Months Ago",
+
         "4 Months Ago",
+
         "5 Months Ago"
     ]
 
@@ -471,13 +496,20 @@ if page == "👤 Check Applicant":
         with cols[i % 3]:
 
             selected_payment = st.selectbox(
+
                 month_labels[i],
-                list(payment_options.keys()),
+
+                list(
+                    payment_options.keys()
+                ),
+
                 key=f"payment_{i}"
             )
 
             payments.append(
-                payment_options[selected_payment]
+                payment_options[
+                    selected_payment
+                ]
             )
 
 
@@ -505,10 +537,15 @@ if page == "👤 Check Applicant":
         with cols[i % 3]:
 
             bill = st.number_input(
+
                 month_labels[i],
+
                 min_value=0.0,
+
                 value=5000.0,
+
                 step=500.0,
+
                 key=f"bill_{i}"
             )
 
@@ -525,6 +562,7 @@ if page == "👤 Check Applicant":
     ):
 
         st.warning(
+
             "⚠️ One or more bills are higher than "
             "the credit limit. Please check the "
             "entered amount."
@@ -555,10 +593,15 @@ if page == "👤 Check Applicant":
         with cols[i % 3]:
 
             payment_amount = st.number_input(
+
                 month_labels[i],
+
                 min_value=0.0,
+
                 value=5000.0,
+
                 step=500.0,
+
                 key=f"pay_{i}"
             )
 
@@ -574,8 +617,11 @@ if page == "👤 Check Applicant":
     st.markdown("---")
 
     check_button = st.button(
+
         "🔍 Check Credit Risk",
+
         type="primary",
+
         use_container_width=True
     )
 
@@ -589,13 +635,21 @@ if page == "👤 Check Applicant":
         try:
 
             probability, prediction = predict_single(
+
                 credit_limit,
+
                 age,
+
                 gender,
+
                 education,
+
                 marriage,
+
                 payments,
+
                 bills,
+
                 pay_amounts
             )
 
@@ -615,9 +669,11 @@ if page == "👤 Check Applicant":
             st.markdown("---")
 
             st.markdown(
+
                 '<div class="section-title">'
                 'Result'
                 '</div>',
+
                 unsafe_allow_html=True
             )
 
@@ -626,7 +682,11 @@ if page == "👤 Check Applicant":
             with col1:
 
                 st.plotly_chart(
-                    create_score_gauge(score),
+
+                    create_score_gauge(
+                        score
+                    ),
+
                     use_container_width=True
                 )
 
@@ -634,16 +694,21 @@ if page == "👤 Check Applicant":
             with col2:
 
                 st.metric(
+
                     "Chance of Missing Next Payment",
+
                     f"{probability * 100:.1f}%"
                 )
 
                 st.metric(
+
                     "Credit Score",
+
                     score
                 )
 
                 st.markdown(
+
                     f"### {risk_icon} {risk}"
                 )
 
@@ -659,26 +724,39 @@ if page == "👤 Check Applicant":
             st.markdown("---")
 
             st.markdown(
+
                 '<div class="section-title">'
                 'Why this result?'
                 '</div>',
+
                 unsafe_allow_html=True
             )
 
-            average_bill = np.mean(bills)
+            average_bill = np.mean(
+                bills
+            )
 
             credit_usage = (
-                average_bill / credit_limit
+
+                average_bill
+                /
+                credit_limit
+
             ) * 100
 
             longest_delay = max(
+
                 max(payments),
+
                 0
             )
 
             months_with_delay = sum(
+
                 1
+
                 for payment in payments
+
                 if payment > 0
             )
 
@@ -687,21 +765,27 @@ if page == "👤 Check Applicant":
             with col1:
 
                 st.metric(
+
                     "Credit Usage",
+
                     f"{credit_usage:.1f}%"
                 )
 
             with col2:
 
                 st.metric(
+
                     "Longest Payment Delay",
+
                     f"{longest_delay} month(s)"
                 )
 
             with col3:
 
                 st.metric(
+
                     "Months With Payment Delay",
+
                     months_with_delay
                 )
 
@@ -709,6 +793,7 @@ if page == "👤 Check Applicant":
         except Exception as e:
 
             st.error(
+
                 f"Unable to calculate the result: {e}"
             )
 
@@ -720,17 +805,21 @@ if page == "👤 Check Applicant":
 elif page == "📁 Check Multiple Applicants":
 
     st.markdown(
+
         '<div class="section-title">'
         'Check Multiple Applicants'
         '</div>',
+
         unsafe_allow_html=True
     )
 
     st.write(
+
         "Upload a CSV file containing multiple applicants."
     )
 
     st.caption(
+
         "The app will calculate the risk for every applicant "
         "in the file."
     )
@@ -741,7 +830,9 @@ elif page == "📁 Check Multiple Applicants":
     # ========================================================
 
     uploaded_file = st.file_uploader(
+
         "Upload CSV",
+
         type=["csv"]
     )
 
@@ -764,8 +855,11 @@ elif page == "📁 Check Multiple Applicants":
             )
 
             st.dataframe(
+
                 df,
+
                 use_container_width=True,
+
                 height=300
             )
 
@@ -775,8 +869,11 @@ elif page == "📁 Check Multiple Applicants":
             # =================================================
 
             if st.button(
+
                 "🔍 Check All Applicants",
+
                 type="primary",
+
                 use_container_width=True
             ):
 
@@ -784,7 +881,9 @@ elif page == "📁 Check Multiple Applicants":
                 # PREPARE ALL APPLICANTS
                 # ---------------------------------------------
 
-                X = prepare_input(df)
+                X = prepare_input(
+                    df
+                )
 
 
                 # ---------------------------------------------
@@ -823,15 +922,19 @@ elif page == "📁 Check Multiple Applicants":
                         "Applicant": i + 1,
 
                         "Chance of Missing Next Payment":
+
                             f"{probability * 100:.1f}%",
 
                         "Credit Score":
+
                             score,
 
                         "Payment Risk":
+
                             f"{risk_icon} {risk}",
 
                         "Recommendation":
+
                             recommendation
                     })
 
@@ -846,6 +949,7 @@ elif page == "📁 Check Multiple Applicants":
                 # =================================================
 
                 st.success(
+
                     f"Successfully checked "
                     f"{len(results)} applicants."
                 )
@@ -858,17 +962,22 @@ elif page == "📁 Check Multiple Applicants":
                 st.markdown("---")
 
                 st.markdown(
+
                     '<div class="section-title">'
                     'Results'
                     '</div>',
+
                     unsafe_allow_html=True
                 )
 
-
                 st.dataframe(
+
                     results,
+
                     use_container_width=True,
+
                     hide_index=True,
+
                     height=400
                 )
 
@@ -884,28 +993,45 @@ elif page == "📁 Check Multiple Applicants":
                 )
 
                 low_count = sum(
-                    results["Payment Risk"].str.contains(
+
+                    results[
+                        "Payment Risk"
+                    ].str.contains(
                         "Low Risk"
                     )
                 )
 
                 moderate_count = sum(
-                    results["Payment Risk"].str.contains(
+
+                    results[
+                        "Payment Risk"
+                    ].str.contains(
                         "Moderate Risk"
                     )
                 )
 
                 high_count = sum(
-                    results["Payment Risk"].str.contains(
+
+                    results[
+                        "Payment Risk"
+                    ].str.contains(
                         "High Risk"
                     )
-                    & ~results["Payment Risk"].str.contains(
+
+                    &
+
+                    ~results[
+                        "Payment Risk"
+                    ].str.contains(
                         "Very High Risk"
                     )
                 )
 
                 very_high_count = sum(
-                    results["Payment Risk"].str.contains(
+
+                    results[
+                        "Payment Risk"
+                    ].str.contains(
                         "Very High Risk"
                     )
                 )
@@ -945,6 +1071,7 @@ elif page == "📁 Check Multiple Applicants":
         except Exception as e:
 
             st.error(
+
                 f"Unable to process the file: {e}"
             )
 
@@ -953,131 +1080,253 @@ elif page == "📁 Check Multiple Applicants":
 # WHAT-IF ANALYSIS
 # ============================================================
 
-
 elif page == "⚡ What-if Analysis":
 
     st.markdown(
-        '<div class="section-title">What-if Analysis</div>',
+
+        '<div class="section-title">'
+        'What-if Analysis'
+        '</div>',
+
         unsafe_allow_html=True
     )
 
     st.write(
+
         "Change the values and check how the situation changes."
     )
 
+
+    # ========================================================
+    # WHAT-IF INPUTS
+    # ========================================================
+
     credit_limit = st.number_input(
+
         "Credit Limit",
+
         min_value=1000,
+
         max_value=1000000,
+
         value=200000,
-        step=1000
+
+        step=1000,
+
+        key="whatif_credit_limit"
     )
+
 
     average_bill = st.number_input(
+
         "Average Monthly Bill",
+
         min_value=0.0,
+
         value=10000.0,
-        step=500.0
+
+        step=500.0,
+
+        key="whatif_average_bill"
     )
+
 
     longest_delay = st.selectbox(
+
         "Longest Payment Delay",
+
         [
+
             "No delay",
+
             "1 month",
+
             "2 months",
+
             "3 months",
+
             "4 months",
+
             "5 months",
+
             "6+ months"
-        ]
+
+        ],
+
+        key="whatif_longest_delay"
     )
+
 
     months_with_delay = st.slider(
+
         "Months With Payment Delay",
+
         min_value=0,
+
         max_value=6,
-        value=0
+
+        value=0,
+
+        key="whatif_months_delay"
     )
 
-    # --------------------------------------------------------
-    # WARNING
-    # --------------------------------------------------------
 
-    if average_bill > credit_limit:
+    # ========================================================
+    # INPUT VALIDATION
+    # ========================================================
+
+    invalid_bill = (
+
+        average_bill > credit_limit
+    )
+
+
+    if invalid_bill:
 
         st.warning(
-            "⚠️ The average monthly bill is higher "
-            "than the credit limit."
+
+            "⚠️ The average monthly bill cannot be "
+            "higher than the credit limit."
         )
 
-    # --------------------------------------------------------
+
+    # ========================================================
     # SEE RESULT BUTTON
-    # --------------------------------------------------------
+    # ========================================================
 
     if st.button(
+
         "🔍 See Result",
+
         type="primary",
-        use_container_width=True
+
+        use_container_width=True,
+
+        key="whatif_result_button"
     ):
 
-        usage = (
-            average_bill / credit_limit
-        ) * 100
+        # ----------------------------------------------------
+        # STOP INVALID SCENARIO
+        # ----------------------------------------------------
 
-        st.markdown("---")
+        if invalid_bill:
 
-        st.markdown(
-            '<div class="section-title">Result</div>',
-            unsafe_allow_html=True
-        )
+            st.error(
 
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            st.metric(
-                "Credit Usage",
-                f"{usage:.1f}%"
-            )
-
-        with col2:
-            st.metric(
-                "Longest Payment Delay",
-                longest_delay
-            )
-
-        with col3:
-            st.metric(
-                "Months With Payment Delay",
-                months_with_delay
-            )
-
-        # Simple interpretation
-
-        if (
-            months_with_delay == 0
-            and longest_delay == "No delay"
-            and usage <= 30
-        ):
-
-            st.success(
-                "🟢 This is a relatively healthy "
-                "payment situation."
-            )
-
-        elif (
-            months_with_delay <= 2
-            and usage <= 70
-        ):
-
-            st.info(
-                "🔵 This situation shows some "
-                "payment or credit usage risk."
+                "❌ Please enter an average monthly bill "
+                "that is less than or equal to the credit limit."
             )
 
         else:
 
-            st.warning(
-                "🔴 This situation shows higher "
-                "payment risk."
+            # ------------------------------------------------
+            # CREDIT USAGE
+            # ------------------------------------------------
+
+            usage = (
+
+                average_bill
+                /
+                credit_limit
+
+            ) * 100
+
+
+            # ------------------------------------------------
+            # RESULT
+            # ------------------------------------------------
+
+            st.markdown("---")
+
+            st.markdown(
+
+                '<div class="section-title">'
+                'Result'
+                '</div>',
+
+                unsafe_allow_html=True
             )
+
+
+            col1, col2, col3 = st.columns(3)
+
+
+            with col1:
+
+                st.metric(
+
+                    "Credit Usage",
+
+                    f"{usage:.1f}%"
+                )
+
+
+            with col2:
+
+                st.metric(
+
+                    "Longest Payment Delay",
+
+                    longest_delay
+                )
+
+
+            with col3:
+
+                st.metric(
+
+                    "Months With Payment Delay",
+
+                    months_with_delay
+                )
+
+
+            # ------------------------------------------------
+            # SIMPLE INTERPRETATION
+            # ------------------------------------------------
+
+            if (
+
+                months_with_delay == 0
+
+                and
+
+                longest_delay == "No delay"
+
+                and
+
+                usage <= 30
+
+            ):
+
+                st.success(
+
+                    "🟢 This is a relatively healthy "
+                    "payment situation."
+                )
+
+
+            elif (
+
+                months_with_delay <= 2
+
+                and
+
+                usage <= 70
+
+            ):
+
+                st.info(
+
+                    "🔵 This situation shows some "
+                    "payment or credit usage risk."
+                )
+
+
+            else:
+
+                st.warning(
+
+                    "🔴 This situation shows higher "
+                    "payment risk."
+                )
