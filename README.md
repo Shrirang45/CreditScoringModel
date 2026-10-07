@@ -4,7 +4,9 @@ A Machine Learning project that predicts the probability of credit card default 
 
 The project includes data preprocessing, feature engineering, model comparison, threshold optimization, and a Streamlit web application for credit risk assessment.
 
----
+## 🚀 Live Demo
+
+👉 **[Try the Credit Risk Checker](https://creditscoringmodel-fwappjbm7daz7yuevimvqfp.streamlit.app/)**
 
 ## 🚀 Features
 
@@ -15,8 +17,6 @@ The project includes data preprocessing, feature engineering, model comparison, 
 - 🔍 **Key Risk Factor Analysis**
 - ⚠️ **Payment Risk Assessment**
 - 🤖 **Machine Learning Model Comparison**
-
----
 
 ## 🤖 Machine Learning
 
@@ -47,8 +47,6 @@ Five classification algorithms were evaluated:
 
 Recall was given importance because identifying potential defaulters is more important than optimizing accuracy alone.
 
----
-
 ## ⚙️ Feature Engineering
 
 The project creates additional features to capture customer financial behavior.
@@ -66,8 +64,6 @@ Measures payment behavior relative to outstanding bills.
 Estimates the amount of bill remaining after payments.
 
 These engineered features are combined with the original customer attributes to create the final **46-feature model input**.
-
----
 
 ## 🖥️ Streamlit Application
 
@@ -100,8 +96,6 @@ Change:
 
 and see how the payment risk situation changes.
 
----
-
 ## 📂 Project Structure
 
 ```text
@@ -127,13 +121,9 @@ Credit-Scoring-Model/
     └── train_model.py
 ```
 
----
-
 ## 🛠️ Tech Stack
 
 **Python • Pandas • NumPy • Scikit-learn • CatBoost • XGBoost • LightGBM • Plotly • Streamlit**
-
----
 
 ## ▶️ Run Locally
 
@@ -172,8 +162,6 @@ streamlit run app.py
 
 The application will open in your browser.
 
----
-
 ## 📊 Dataset
 
 This project uses the **UCI Credit Card Default dataset**.
@@ -181,8 +169,6 @@ This project uses the **UCI Credit Card Default dataset**.
 The dataset contains customer demographic information, credit limits, payment history, billing amounts, payment amounts, and the target variable indicating whether the customer defaulted on the following month's payment.
 
 The original dataset is kept **locally** and is intentionally excluded from GitHub using `.gitignore`.
-
----
 
 ## 🎯 Risk Threshold
 
@@ -196,8 +182,6 @@ Default Probability ≥ 0.25
 
 The threshold was selected based on the project's focus on identifying potential defaulters while maintaining a practical balance between precision and recall.
 
----
-
 ## 📈 Model Selection
 
 Models were evaluated using **5-fold stratified cross-validation**.
@@ -205,8 +189,6 @@ Models were evaluated using **5-fold stratified cross-validation**.
 ROC-AUC was used as the primary model selection metric because it evaluates the model's ability to distinguish between defaulters and non-defaulters across different classification thresholds.
 
 CatBoost achieved the best cross-validation ROC-AUC among the evaluated models and was selected as the final model.
-
----
 
 ## 📁 Important Files
 
@@ -220,7 +202,27 @@ CatBoost achieved the best cross-validation ROC-AUC among the evaluated models a
 | `models/credit_scoring_model.joblib` | Trained CatBoost model |
 | `figures/` | Project analysis and model comparison figures |
 
----
+## 🔄 Prediction Workflow
+
+```text
+User Input
+    ↓
+Data Cleaning
+    ↓
+Feature Engineering
+    ↓
+46 Model Features
+    ↓
+CatBoost Model
+    ↓
+Default Probability
+    ↓
+0.25 Decision Threshold
+    ↓
+Risk Assessment
+    ↓
+Credit Score + Recommendation
+```
 
 ## ⚠️ Disclaimer
 
@@ -229,8 +231,6 @@ This is an **educational and portfolio project**.
 The displayed credit score is a **project-specific model score** and is not an official CIBIL, FICO, or financial institution credit score.
 
 The model should not be used as the sole basis for real-world lending or financial decisions.
-
----
 
 ## 👨‍💻 Author
 
