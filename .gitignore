@@ -1,0 +1,28 @@
+# Dataset - keep locally, do not upload to GitHub
+UCI_Credit_Card.csv
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.venv/
+
+# IDE files
+.vscode/
+.idea/
+
+# CatBoost generated files
+catboost_info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Generated prediction files
+credit_scored_applicants.csv
